@@ -1,0 +1,643 @@
+/* ===========================
+   LAYOUT
+=========================== */
+
+.container{
+
+    width:min(1200px,92%);
+
+    margin:0 auto;
+
+    padding:60px 0 80px;
+
+}
+
+/* ===========================
+   HERO
+=========================== */
+
+.hero{
+
+    text-align:center;
+
+    margin-bottom:50px;
+
+}
+
+.hero h1{
+
+    font-size:58px;
+
+    font-weight:800;
+
+    line-height:1.15;
+
+    margin-bottom:18px;
+
+    background:linear-gradient(
+        90deg,
+        #2563eb,
+        #7c3aed
+    );
+
+    -webkit-background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+
+}
+
+.hero p{
+
+    width:min(760px,90%);
+
+    margin:0 auto;
+
+    color:#64748b;
+
+    font-size:18px;
+
+    line-height:1.8;
+
+}
+
+/* ===========================
+   SEARCH
+=========================== */
+
+.search-form{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:16px;
+
+    margin:45px 0 55px;
+
+}
+
+.search-form input{
+
+    width:520px;
+
+    height:58px;
+
+    padding:0 22px;
+
+    border-radius:16px;
+
+    border:1px solid #dbe4f0;
+
+    background:#fff;
+
+    font-size:16px;
+
+    transition:.25s;
+
+}
+
+.search-form input:focus{
+
+    outline:none;
+
+    border-color:#2563eb;
+
+    box-shadow:
+
+        0 0 0 5px
+
+        rgba(37,99,235,.12);
+
+}
+
+.search-form button{
+
+    height:58px;
+
+    padding:0 30px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:linear-gradient(
+
+        135deg,
+
+        #2563eb,
+
+        #4f46e5
+
+    );
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.search-form button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+
+        0 12px 25px
+
+        rgba(37,99,235,.25);
+
+}
+
+/* ===========================
+   CARD
+=========================== */
+
+.card{
+
+    background:white;
+
+    border-radius:22px;
+
+    padding:32px;
+
+    margin-bottom:28px;
+
+    border:1px solid #edf2f7;
+
+    box-shadow:
+
+        0 15px 35px
+
+        rgba(15,23,42,.06);
+
+}
+
+.card h2{
+
+    font-size:28px;
+
+    color:#1e293b;
+
+    margin-bottom:18px;
+
+}
+
+.card h3{
+
+    color:#2563eb;
+
+    margin-bottom:10px;
+
+}
+
+.card p{
+
+    color:#475569;
+
+    line-height:1.8;
+
+}
+
+.card li{
+
+    margin:10px 0;
+
+    color:#475569;
+
+}
+
+
+
+/* ===========================
+   MODULES
+=========================== */
+
+.modules-grid{
+
+    display:grid;
+
+    grid-template-columns:
+
+        repeat(auto-fit,minmax(320px,1fr));
+
+    gap:22px;
+
+    margin-top:20px;
+
+}
+
+.module-card{
+
+    background:#fafcff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:18px;
+
+    padding:22px;
+
+    transition:.25s;
+
+}
+
+.module-card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:
+
+        0 16px 35px
+
+        rgba(0,0,0,.08);
+
+}
+
+.module-card h3{
+
+    color:#2563eb;
+
+    margin-bottom:14px;
+
+}
+
+.module-card ul{
+
+    padding-left:20px;
+
+}
+
+/* ===========================
+   LINKS
+=========================== */
+
+a{
+
+    color:#2563eb;
+
+    font-weight:500;
+
+}
+
+a:hover{
+
+    color:#4338ca;
+
+}
+
+/* ===========================
+   EXPORT
+=========================== */
+
+.export-buttons{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:18px;
+
+    margin-top:35px;
+
+}
+
+.export-buttons button{
+
+    border:none;
+
+    background:#111827;
+
+    color:white;
+
+    padding:15px 28px;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.export-buttons button:hover{
+
+    background:#2563eb;
+
+    transform:translateY(-3px);
+
+}
+
+/* ===========================
+   ERROR
+=========================== */
+
+.error{
+
+    padding:18px;
+
+    margin:30px auto;
+
+    max-width:700px;
+
+    border-radius:16px;
+
+    background:#fee2e2;
+
+    color:#b91c1c;
+
+    text-align:center;
+
+    font-weight:600;
+
+}
+
+/* ===========================
+   LOADING
+=========================== */
+
+.loading{
+
+    text-align:center;
+
+    padding:45px 0;
+
+}
+
+.spinner{
+
+    font-size:42px;
+
+    color:#2563eb;
+
+    animation:spin .9s linear infinite;
+
+}
+
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media(max-width:768px){
+
+    .hero h1{
+
+        font-size:40px;
+
+    }
+
+    .hero p{
+
+        font-size:16px;
+
+    }
+
+    .search-form{
+
+        flex-direction:column;
+
+    }
+
+    .search-form input{
+
+        width:100%;
+
+    }
+
+    .search-form button{
+
+        width:100%;
+
+    }
+
+}
+
+
+
+/* =====================================
+   PREMIUM HERO
+===================================== */
+
+.hero{
+
+    position:relative;
+
+    padding:60px 30px;
+
+    border-radius:28px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(37,99,235,.08),
+            rgba(124,58,237,.08)
+        );
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.6);
+
+    box-shadow:
+        0 20px 60px rgba(15,23,42,.08);
+
+}
+
+/* =====================================
+   SECTION SPACING
+===================================== */
+
+.card+.card{
+
+    margin-top:26px;
+
+}
+
+/* =====================================
+   LISTS
+===================================== */
+
+.card ul,
+.card ol{
+
+    margin-top:14px;
+
+    padding-left:24px;
+
+}
+
+.card li{
+
+    padding:8px 0;
+
+    border-bottom:1px solid #eef2f7;
+
+}
+
+.card li:last-child{
+
+    border:none;
+
+}
+
+/* =====================================
+   SCROLLBAR
+===================================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#edf2f7;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#94a3b8;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#64748b;
+
+}
+
+/* =====================================
+   BUTTON RIPPLE FEEL
+===================================== */
+
+button{
+
+    transition:
+        transform .25s,
+        box-shadow .25s,
+        opacity .25s;
+
+}
+
+button:active{
+
+    transform:scale(.97);
+
+}
+
+/* =====================================
+   LINKS
+===================================== */
+
+.card a{
+
+    word-break:break-word;
+
+}
+
+/* =====================================
+   SUBTLE ANIMATIONS
+===================================== */
+
+.card{
+
+    animation:fadeUp .45s ease;
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+}
+
+/* =====================================
+   FOOTER SPACE
+===================================== */
+
+.export-buttons{
+
+    padding-bottom:60px;
+
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media(max-width:900px){
+
+    .hero{
+
+        padding:40px 24px;
+
+    }
+
+    .card{
+
+        padding:22px;
+
+    }
+
+}
+
+@media(max-width:550px){
+
+    .hero h1{
+
+        font-size:34px;
+
+    }
+
+    .hero p{
+
+        font-size:15px;
+
+    }
+
+    .modules-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}

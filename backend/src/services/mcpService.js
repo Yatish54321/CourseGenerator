@@ -1,102 +1,112 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
+const { tavily } = require("@tavily/core");
 
-// Basic MCP-like connector service that fetches and extracts trusted content.
-// NOTE: This is a simplified example for development/testing only.
+const {
+    cleanText,
+    topKChunks
+} = require("../utils/retrievalUtils");
 
-const trustedSources = {
-  mdn: {
-    name: 'MDN Web Docs',
-    search: (topic) => `https://developer.mozilla.org/en-US/search?q=${encodeURIComponent(topic)}`,
-    allowedHost: 'developer.mozilla.org'
-  },
-  freecodecamp: {
-    name: 'freeCodeCamp',
-    search: (topic) => `https://www.freecodecamp.org/news/search/?query=${encodeURIComponent(topic)}`,
-    allowedHost: 'www.freecodecamp.org'
-  }
-};
+const tvly = tavily({
+    apiKey: process.env.TAVILY_API_KEY
+});
 
-async function fetchUrlText(url) {
-  try {
-    const resp = await axios.get(url, { timeout: 10000, headers: { 'User-Agent': 'CourseGenerator/1.0 (+dev)' } });
-    const $ = cheerio.load(resp.data);
+const BLOCKED_DOMAINS = [
+    "facebook.com",
+    "instagram.com",
+    "twitter.com",
+    "x.com",
+    "linkedin.com",
+    "tiktok.com",
+    "pinterest.com"
+];
 
-    // Try common article selectors
-    const selectors = ['article', '#content', '.post-content', '.entry-content', '.main-content'];
-    for (const sel of selectors) {
-      const el = $(sel);
-      if (el && el.text().trim().length > 200) {
-        return { url, text: el.text().trim().slice(0, 20000) };
-      }
+function isAllowed(url) {
+
+    try {
+
+        const host = new URL(url).hostname;
+
+        return !BLOCKED_DOMAINS.some(domain =>
+            host === domain ||
+            host.endsWith("." + domain)
+        );
+
+    } catch {
+
+        return false;
+
     }
 
-    // Fallback: extract largest text block
-    let bestText = '';
-    $('p').each((i, p) => {
-      const t = $(p).text().trim();
-      if (t.length > bestText.length) bestText = t;
-    });
-    return { url, text: bestText.slice(0, 20000) };
-  } catch (err) {
-    return { url, error: String(err.message) };
-  }
 }
 
-async function fetchFromMDN(topic) {
-  const searchUrl = trustedSources.mdn.search(topic);
-  try {
-    const searchResp = await axios.get(searchUrl, { timeout: 8000, headers: { 'User-Agent': 'CourseGenerator/1.0 (+dev)' } });
-    const $ = cheerio.load(searchResp.data);
-    const firstLink = $('a.result-title').first().attr('href') || $('a').filter((i,el)=> $(el).attr('href') && $(el).attr('href').startsWith('/')).first().attr('href');
-    if (!firstLink) return [{ url: searchUrl, error: 'No search result link found on MDN' }];
-    const fullUrl = firstLink.startsWith('http') ? firstLink : `https://developer.mozilla.org${firstLink}`;
-    return [await fetchUrlText(fullUrl)];
-  } catch (err) {
-    return [{ url: searchUrl, error: String(err.message) }];
-  }
+function normalizeTopic(topic) {
+
+    const map = {
+
+        "c++": "C++ Programming",
+        "c": "C Programming",
+        "js": "JavaScript",
+        "ts": "TypeScript",
+        "mern": "MERN Stack"
+
+    };
+
+    return map[topic.trim().toLowerCase()] || topic.trim();
+
 }
 
-async function fetchFromFreeCodeCamp(topic) {
-  const searchUrl = trustedSources.freecodecamp.search(topic);
-  try {
-    const searchResp = await axios.get(searchUrl, { timeout: 8000, headers: { 'User-Agent': 'CourseGenerator/1.0 (+dev)' } });
-    const $ = cheerio.load(searchResp.data);
-    const firstLink = $('a.card').first().attr('href') || $('a').filter((i,el)=> $(el).attr('href') && $(el).attr('href').includes('/news/')).first().attr('href');
-    if (!firstLink) return [{ url: searchUrl, error: 'No search result link found on freeCodeCamp' }];
-    const fullUrl = firstLink.startsWith('http') ? firstLink : `https://www.freecodecamp.org${firstLink}`;
-    return [await fetchUrlText(fullUrl)];
-  } catch (err) {
-    return [{ url: searchUrl, error: String(err.message) }];
-  }
-}
+async function fetchContent({ topic }) {
 
-async function fetchGenericUrl(url) {
-  // Basic host allowlist check - only allow fetching from common trusted hosts by default
-  try {
-    const allowedHosts = ['developer.mozilla.org', 'www.freecodecamp.org', 'raw.githubusercontent.com', 'medium.com'];
-    const u = new URL(url);
-    if (!allowedHosts.includes(u.host)) {
-      return { url, error: `Host not in allowlist: ${u.host}` };
+    console.log("========== TAVILY ==========");
+
+    const searchTopic = normalizeTopic(topic);
+
+    const response = await tvly.search(
+        `${searchTopic} official documentation tutorial roadmap complete guide`,
+        {
+            searchDepth: "basic",
+            maxResults: 5,
+            includeRawContent: false
+        }
+    );
+
+    const results = response.results || [];
+
+    const documents = [];
+
+    for (const result of results) {
+
+        if (
+            !result.url ||
+            !result.content ||
+            !isAllowed(result.url)
+        ) {
+            continue;
+        }
+
+        documents.push({
+
+            title: result.title || "Untitled",
+
+            url: result.url,
+
+            source: new URL(result.url).hostname,
+
+            content: cleanText(result.content)
+
+        });
+
     }
-    return await fetchUrlText(url);
-  } catch (err) {
-    return { url, error: String(err.message) };
-  }
+
+    console.log(`Retrieved ${documents.length} documents`);
+
+    return topKChunks(
+        documents,
+        searchTopic,
+        3
+    );
+
 }
 
-exports.fetchContent = async ({ topic, sources = ['mdn','freecodecamp'], url }) => {
-  const results = {};
-
-  if (url) {
-    results.generic = await fetchGenericUrl(url);
-    return results;
-  }
-
-  const tasks = [];
-  if (sources.includes('mdn')) tasks.push(fetchFromMDN(topic).then(r => results.mdn = r));
-  if (sources.includes('freecodecamp')) tasks.push(fetchFromFreeCodeCamp(topic).then(r => results.freecodecamp = r));
-
-  await Promise.all(tasks);
-  return results;
+module.exports = {
+    fetchContent
 };
