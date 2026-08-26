@@ -10,11 +10,10 @@ function Loading() {
 
             <FaSpinner className="spinner" />
 
-            <h3>Generating Course...</h3>
+            <h3>Your course is taking shape</h3>
 
             <p>
-                Retrieving trusted resources and
-                building your learning roadmap.
+                Finding trusted resources and arranging the best learning path.
             </p>
 
         </div>

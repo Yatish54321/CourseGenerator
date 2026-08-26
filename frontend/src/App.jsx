@@ -49,15 +49,32 @@ function App() {
 
         <div className="container">
 
+            <nav className="topbar" aria-label="Main navigation">
+                <a className="wordmark" href="/" aria-label="Course Generator home">
+                    <span className="brand-mark">CG</span>
+                    <span>course<span>craft</span></span>
+                </a>
+                <span className="status-chip"><i /> RAG-powered learning</span>
+            </nav>
+
             <header className="hero">
+
+                <div className="hero-topline">
+                    <span>Build your learning path</span>
+                </div>
 
                 <h1>Course Generator</h1>
 
                 <p>
-                    Generate structured learning roadmaps using
-                    Retrieval-Augmented Generation (RAG),
-                    trusted documentation and Gemini.
+                    Turn any technical topic into a focused learning path,
+                    shaped by trusted documentation and Gemini.
                 </p>
+
+                <div className="hero-meta" aria-label="Course generator features">
+                    <span><i /> Structured roadmaps</span>
+                    <span><i /> Practical projects</span>
+                    <span><i /> Curated resources</span>
+                </div>
 
             </header>
 
@@ -76,6 +93,17 @@ function App() {
 
                 </div>
 
+            )}
+
+            {!course && !loading && !error && (
+                <div className="empty-state">
+                    <span className="empty-number">01</span>
+                    <div>
+                        <p className="empty-kicker">Start with a subject</p>
+                        <h2>Your next skill is one prompt away.</h2>
+                        <p>Choose a topic above and get a roadmap that moves from fundamentals to real-world confidence.</p>
+                    </div>
+                </div>
             )}
 
             {
