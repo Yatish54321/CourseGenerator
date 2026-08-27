@@ -4,7 +4,7 @@ import "./styles/course.css";
 
 import SearchBar from "./components/SearchBar";
 import Loading from "./components/Loading";
-import CourseOverview from "./components/CourseOverview";
+import CourseOverview from "./components/courseOverview";
 import LearningObjectives from "./components/LearningObjectives";
 import ModuleSection from "./components/ModuleSection";
 import TopicHierarchy from "./components/TopicHierarchy";
